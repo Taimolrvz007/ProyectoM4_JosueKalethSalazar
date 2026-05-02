@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   // 1. Estados para capturar los datos de los inputs
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -26,8 +24,6 @@ const Register: React.FC = () => {
       // Guardar Nombre y Apellido en Firestore (Colección "usuarios")
       // Usamos el UID generado por Auth como ID del documento para que estén vinculados
       await setDoc(doc(db, "usuarios", user.uid), {
-        nombre: nombre,
-        apellido: apellido,
         email: email,
         uid: user.uid,
         createdAt: new Date()
