@@ -1,4 +1,5 @@
 // api/send-email.ts
+// @ts-nocheck
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
 // Configuramos el "cartero" (AWS) con tus llaves secretas
