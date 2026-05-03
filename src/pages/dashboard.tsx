@@ -2,22 +2,22 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { 
-  collection, addDoc, query, where, onSnapshot, 
-  updateDoc, deleteDoc, doc, orderBy 
+import {
+  collection, addDoc, query, where, onSnapshot,
+  updateDoc, deleteDoc, doc, orderBy
 } from 'firebase/firestore';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sendingEmail, setSendingEmail] = useState(false); // Estado para el feedback del botón
   const navigate = useNavigate();
 
   // 1. Asegurar que el usuario esté cargado antes de pedir tareas
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // El usuario existe, ahora buscamos sus tareas
         const q = query(
           collection(db, 'tasks'),
           where('userId', '==', user.uid),
@@ -33,7 +33,6 @@ const Dashboard = () => {
           setLoading(false);
         }, (error) => {
           console.error("Error en tiempo real:", error);
-          // Si da error de índice, borra la línea de orderBy temporalmente
         });
 
         return () => unsubscribeSnapshot();
@@ -45,7 +44,34 @@ const Dashboard = () => {
     return () => unsubscribeAuth();
   }, [navigate]);
 
-  // ERROR 1: Corregir Guardado
+  // FUNCIÓN NUEVA: Envío de Email a través de la Vercel Function
+  const handleSendEmail = async () => {
+    if (tasks.length === 0) return alert("No tienes tareas para enviar.");
+
+    setSendingEmail(true);
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tasks: tasks,
+          userEmail: auth.currentUser?.email,
+        }),
+      });
+
+      if (response.ok) {
+        alert("✅ Resumen enviado con éxito a tu correo.");
+      } else {
+        throw new Error("Error en la respuesta del servidor");
+      }
+    } catch (error) {
+      console.error("Error al enviar email:", error);
+      alert("❌ No se pudo enviar el email. Revisa la consola.");
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     const user = auth.currentUser;
@@ -58,13 +84,12 @@ const Dashboard = () => {
         userId: user.uid,
         createdAt: Date.now()
       });
-      setNewTaskTitle(''); 
+      setNewTaskTitle('');
     } catch (error) {
       alert("Error al guardar: " + error);
     }
   };
 
-  // ERROR 2: Corregir Selección (Checkbox)
   const toggleTask = async (id: string, currentStatus: boolean) => {
     try {
       const taskRef = doc(db, 'tasks', id);
@@ -74,7 +99,6 @@ const Dashboard = () => {
     }
   };
 
-  // ERROR 3: Corregir Botón Eliminar
   const deleteTask = async (id: string) => {
     try {
       await deleteDoc(doc(db, 'tasks', id));
@@ -96,8 +120,8 @@ const Dashboard = () => {
         <h1 className="text-4xl font-bold text-center mb-8">Mis Tareas</h1>
 
         <form onSubmit={handleCreateTask} className="flex gap-2 mb-8">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             placeholder="Escribe una tarea..."
@@ -107,29 +131,40 @@ const Dashboard = () => {
         </form>
 
         <div className="space-y-3">
-          {loading ? <p className="text-center opacity-50">Cargando...</p> : 
+          {loading ? <p className="text-center opacity-50">Cargando...</p> :
             tasks.length === 0 ? <p className="text-center opacity-50">No hay tareas pendientes.</p> :
-            tasks.map(task => (
-              <div key={task.id} className="bg-slate-800 p-4 rounded-lg flex items-center justify-between group">
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    checked={task.completed} 
-                    onChange={() => toggleTask(task.id, task.completed)}
-                    className="w-5 h-5 cursor-pointer"
-                  />
-                  <span className={task.completed ? "line-through opacity-40" : ""}>{task.title}</span>
+              tasks.map(task => (
+                <div key={task.id} className="bg-slate-800 p-4 rounded-lg flex items-center justify-between group">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleTask(task.id, task.completed)}
+                      className="w-5 h-5 cursor-pointer"
+                    />
+                    <span className={task.completed ? "line-through opacity-40" : ""}>{task.title}</span>
+                  </div>
+                  <button
+                    onClick={() => deleteTask(task.id)}
+                    className="text-red-400 opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded transition"
+                  >
+                    Eliminar
+                  </button>
                 </div>
-                <button
-                  onClick={() => deleteTask(task.id)}
-                  className="text-red-400 opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded transition"
-                >
-                  Eliminar
-                </button>
-              </div>
-            ))
+              ))
           }
         </div>
+
+        {/* BOTÓN DE RESUMEN POR EMAIL (HITO 7) */}
+        {!loading && tasks.length > 0 && (
+          <button
+            onClick={handleSendEmail}
+            disabled={sendingEmail}
+            className="w-full mt-8 bg-emerald-600 text-white font-bold py-3 rounded-lg hover:bg-emerald-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {sendingEmail ? "Enviando..." : "📧 Enviar Resumen por Email"}
+          </button>
+        )}
       </div>
     </div>
   );
