@@ -17,7 +17,7 @@ export const ProtectedRoute = ({ children }: Props) => {
       setUser(currentUser);
       setLoading(false);
     });
-    
+
     // Limpieza del escuchador al desmontar el componente
     return () => unsubscribe();
   }, []);

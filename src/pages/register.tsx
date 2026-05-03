@@ -8,7 +8,7 @@ const Register: React.FC = () => {
   // 1. Estados para capturar los datos de los inputs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const navigate = useNavigate();
 
   // 2. Función que se ejecuta al enviar el formulario
@@ -30,7 +30,7 @@ const Register: React.FC = () => {
       });
 
       console.log("Usuario registrado con éxito en Auth y Firestore");
-      
+
       // Redirigir al dashboard tras el registro exitoso
       navigate('/dashboard');
 
@@ -45,26 +45,26 @@ const Register: React.FC = () => {
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl p-10">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Crea tu cuenta</h2>
         <p className="text-gray-500 mb-8">Únete a nuestra comunidad hoy mismo.</p>
-        
+
         {/* Agregamos el onSubmit al formulario */}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
-          <input 
-            type="email" 
-            placeholder="Email" 
+          <input
+            type="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded-lg bg-gray-50 outline-none focus:border-blue-500" 
+            className="p-3 border rounded-lg bg-gray-50 outline-none focus:border-blue-500"
             required
           />
-          <input 
-            type="password" 
-            placeholder="Contraseña" 
+          <input
+            type="password"
+            placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 border rounded-lg bg-gray-50 outline-none focus:border-blue-500" 
+            className="p-3 border rounded-lg bg-gray-50 outline-none focus:border-blue-500"
             required
           />
-          <button 
+          <button
             type="submit"
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-all transform hover:scale-[1.02]"
           >
