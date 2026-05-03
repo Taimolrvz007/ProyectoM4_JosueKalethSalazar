@@ -1,128 +1,103 @@
-# 🚀 Task Manager Pro - Proyecto Integrador M4
+# 📝 Task Manager Pro - Módulo 4
 
-Este es un administrador de tareas (To-Do List) moderno desarrollado con **React**, **TypeScript** y **Firebase**. El proyecto implementa un sistema multi-usuario completo, permitiendo que cada usuario gestione su propia lista de tareas de forma privada y segura.
-
-## 📝 Descripción del Proyecto
-
-La aplicación permite a los usuarios registrarse e iniciar sesión para gestionar sus tareas diarias. Gracias a la integración con Firebase Firestore, los datos se sincronizan en tiempo real, y mediante las Security Rules, se garantiza que ningún usuario pueda ver o editar las tareas de otra persona.
-
-- **Repositorio:** `ProyectoM4_JosueKalethSalazar`
-- **GitHub:** [https://github.com/Taimolrvz007/ProyectoM4_JosueKalethSalazar](https://github.com/Taimolrvz007/ProyectoM4_JosueKalethSalazar)
-- **Demo en vivo:** [https://proyecto-m4-josue-kaleth-salazar.vercel.app/login](https://proyecto-m4-josue-kaleth-salazar.vercel.app/login)
+Esta aplicación es un gestor de tareas inteligente que combina **React** para la interfaz, **Firebase** para la persistencia de datos y **AWS SES** para el envío de notificaciones por correo electrónico mediante Vercel Functions.
 
 ---
 
-## ⚙️ Guía de Instalación y Configuración
+## 🛠️ Instalación y Configuración
 
-Sigue estos pasos para clonar el proyecto y ejecutarlo en tu máquina local:
+Si deseas clonar este repositorio y ejecutarlo en tu entorno local o desplegarlo en tu propio Vercel, sigue estos pasos:
 
-### 1. Clonar el repositorio
-
-Abre una terminal y ejecuta el siguiente comando:
+### 1. Clonar el Repositorio
 
 ```bash
 git clone https://github.com/Taimolrvz007/ProyectoM4_JosueKalethSalazar.git
 cd ProyectoM4_JosueKalethSalazar
 ```
 
-### 2. Instalar dependencias
+### 2. Instalar Dependencias
 
-Asegúrate de tener instalado Node.js y ejecuta:
+Este proyecto utiliza paquetes específicos para la comunicación con AWS y la gestión de la interfaz. Ejecuta:
 
 ```bash
 npm install
 ```
 
-### 3. Configurar Firebase
+Dependencias clave instaladas:
 
-Para que el proyecto funcione, debes crear un archivo llamado `.env` en la raíz del proyecto y pegar tus credenciales de Firebase:
+- `@aws-sdk/client-ses`: Para conectar con el servicio de correos de Amazon.
+- `firebase`: Para la base de datos y autenticación.
+- `lucide-react`: Para la iconografía de la app.
+- `typescript`: Para el tipado estático del proyecto.
+
+### 3. Variables de Entorno (`.env`)
+
+Crea un archivo `.env.local` en la raíz y añade tus credenciales (no las compartas):
 
 ```env
-VITE_FIREBASE_API_KEY=TU_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN=TU_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID=TU_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET=TU_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID=TU_SENDER_ID
-VITE_FIREBASE_APP_ID=TU_APP_ID
+VITE_FIREBASE_API_KEY=tu_api_key
+VITE_FIREBASE_AUTH_DOMAIN=tu_dominio
+VITE_FIREBASE_PROJECT_ID=tu_id
+VITE_FIREBASE_STORAGE_BUCKET=tu_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
+VITE_FIREBASE_APP_ID=tu_app_id
+
+# Estas se configuran directamente en el panel de Vercel para la API
+AWS_ACCESS_KEY_ID=tu_access_key
+AWS_SECRET_ACCESS_KEY=tu_secret_key
+AWS_REGION=us-east-2
 ```
-
-### 4. Ejecutar la aplicación
-
-Para iniciar el entorno de desarrollo:
-
-```bash
-npm run dev
-```
-
-La app se abrirá en `http://localhost:5173`.
 
 ---
 
-## 🤖 Uso de IA (Gemini)
+## 🤖 Guía de Prompts (QA de Desarrollo)
 
-Durante el desarrollo, se utilizó a Gemini como mentor técnico para optimizar el flujo de trabajo:
+Durante la creación de este proyecto, se utilizaron técnicas de Prompt Engineering para resolver bloqueos técnicos. Aquí los más importantes:
 
-### 1. Configuración de Navegación (SPA)
+### Prompt 1: Error 500 en Vercel al enviar email
 
-- **Pregunta:** "¿Cómo puedo hacer que mi código sea una Single Page Application (SPA) con `react-router-dom`?"
-- **Respuesta:** Gemini guió la instalación de la librería y la configuración del `BrowserRouter` en el `main.tsx`, explicando cómo definir rutas para `/login`, `/register` y el `/dashboard`.
+- **Pregunta:** "Tengo un error 500 en Vercel al intentar enviar el email, el log dice: `MessageRejected: Email address is not verified`."
+- **Respuesta:** El error indica que AWS SES está en modo Sandbox. Para solucionarlo, debes entrar a la consola de AWS SES en la región correcta (`us-east-2`), ir a "Verified Identities" y validar manualmente tanto el correo remitente como el destinatario.
 
-### 2. Integración de Firebase Auth
+### Prompt 2: Vite no reconoce `process.env` en `/api`
 
-- **Pregunta:** "¿Cómo conecto mis formularios de React con la autenticación de Firebase?"
-- **Respuesta:** Se implementó la lógica de `createUserWithEmailAndPassword` y `signInWithEmailAndPassword`, asegurando el manejo de promesas para capturar errores de acceso.
+- **Pregunta:** "Vite no reconoce `process.env` en mi carpeta `/api` y el despliegue falla por TypeScript."
+- **Respuesta:** Vercel Functions corren en un entorno Node.js, mientras que Vite corre en el navegador. Debes ajustar el `tsconfig.json` para incluir la carpeta `/api`, configurar `moduleResolution: "Node"` e instalar `@types/node` para que TypeScript reconozca las variables de entorno del servidor.
 
-### 3. Resolución de errores de compilación
+### Prompt 3: Enviar datos desde React a la función serverless
 
-- **Pregunta:** "Tengo un error de variables no utilizadas en mi componente de registro que impide el despliegue en Vercel. ¿Cómo lo soluciono?"
-- **Respuesta:** Gemini sugirió limpiar el estado de React y eliminar variables huérfanas, permitiendo que TypeScript validara el código para la compilación final.
-
-### 4. Error de Rutas en Vercel (404)
-
-- **Pregunta:** "Al navegar a `/login` en Vercel recibo un error 404, pero en local funciona. ¿Por qué?"
-- **Respuesta:** Se identificó que las SPAs necesitan un archivo `vercel.json` para redirigir las peticiones al `index.html`. La IA proporcionó la configuración necesaria para solucionar el problema de enrutamiento en producción.
-
-### 5. Seguridad de Datos y Multi-usuario
-
-- **Pregunta:** "¿Cómo evito que un usuario vea las tareas de otro?"
-- **Respuesta:** Se configuraron `Security Rules` en Firestore para comparar el `request.auth.uid` con el campo `userId` de cada tarea, garantizando privacidad total entre usuarios.
-
-### 6. Tipado con TypeScript
-
-- **Pregunta:** "¿Cómo defino una interfaz para mis tareas que incluya el ID de Firestore?"
-- **Respuesta:** Se estructuró la interfaz `Task` con tipos estrictos, mejorando la robustez del código y evitando errores de "undefined" al renderizar la lista.
-
-### 7. Actualizaciones en Tiempo Real
-
-- **Pregunta:** "¿Cómo hago para que la lista de tareas se actualice automáticamente sin refrescar la página?"
-- **Respuesta:** Gemini recomendó el uso de `onSnapshot` de Firestore, lo que permitió una experiencia de usuario dinámica y fluida.
-
-### 8. Lógica de Redirección Protegida
-
-- **Pregunta:** "¿Cómo evito que alguien entre al Dashboard si no ha iniciado sesión?"
-- **Respuesta:** Se implementó un observador de estado con `onAuthStateChanged` y el hook `useNavigate` para proteger las rutas privadas.
-
-### 9. Gestión de Variables de Entorno
-
-- **Pregunta:** "¿Cómo uso variables `.env` en Vite para que Firebase no exponga mis llaves en el código fuente de GitHub?"
-- **Respuesta:** Se explicó el uso del prefijo `VITE_` y cómo configurar estas variables en el panel de control de Vercel para el despliegue seguro.
-
-### 10. Limpieza de Listeners (Performance)
-
-- **Pregunta:** "¿Por qué es importante el 'return' dentro de un `useEffect` con Firebase?"
-- **Respuesta:** Se enseñó a retornar la función de desuscripción de Firestore para evitar fugas de memoria y procesos innecesarios en el navegador.
-
-### 11. Traducción de Errores de Firebase
-
-- **Pregunta:** "Firebase me da errores en inglés como `auth/invalid-credential`. ¿Cómo los muestro en español?"
-- **Respuesta:** Se creó un mapeo de errores para mostrar mensajes amigables como "Correo o contraseña incorrectos" en la interfaz de usuario.
+- **Pregunta:** "¿Cómo puedo hacer que mi función serverless reciba los datos de las tareas desde React?"
+- **Respuesta:** Debes usar el método `POST` en tu fetch hacia `/api/send-email`. En el cuerpo de la petición (`body`), envía un JSON con el email del usuario y el array de tareas. Luego, en la función de Vercel, parsea ese cuerpo para construir el mensaje que SES enviará.
 
 ---
 
-## 🛠️ Tecnologías
+## 🏗️ Estructura del Proyecto
 
-- React 18 & Vite
-- TypeScript
-- Firebase (Auth & Firestore)
-- Tailwind CSS
-- Vercel (Hosting)
+- `/src`: Código fuente de la aplicación React (Frontend).
+- `/api`: Funciones Serverless de Vercel (Backend/Node.js).
+- `tsconfig.json`: Configuración de compilación unificada para Front y Back.
+- `vercel.json`: (Opcional) Configuración específica de rutas para el despliegue.
+
+---
+
+## 🚀 Despliegue
+
+1. Sube tu código a GitHub.
+2. Conecta el repositorio con Vercel.
+3. **IMPORTANTE:** Configura las variables de entorno de AWS en el panel de Vercel (`Settings > Environment Variables`) antes de desplegar.
+
+---
+
+## 👤 Autor
+
+**Programador:** Josué Kaleth Salazar Valderrama
+
+- **GitHub:** [Taimolrvz007](https://github.com/Taimolrvz007)
+- **LinkedIn:** [Tu Enlace de LinkedIn Aquí] *(Opcional)*
+
+---
+
+## 🔗 Enlaces del Proyecto
+
+- **Repositorio en GitHub:** [ProyectoM4_JosueKalethSalazar](https://github.com/Taimolrvz007/ProyectoM4_JosueKalethSalazar.git)
+- **Aplicación Desplegada (Vercel):** [proyecto-m4-josue-kaleth-salazar.vercel.app](https://proyecto-m4-josue-kaleth-salazar.vercel.app/)
