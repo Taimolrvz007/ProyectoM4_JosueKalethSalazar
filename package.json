@@ -8,9 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
-    
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.1041.0",
     "firebase": "^12.12.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
