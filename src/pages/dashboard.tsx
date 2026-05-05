@@ -6,8 +6,8 @@ import {
   collection, addDoc, query, where, onSnapshot,
   updateDoc, deleteDoc, doc, orderBy
 } from 'firebase/firestore';
-import styles from './Dashboard-style.module.css';
-
+// @ts-ignore
+import styles from './dashboard-style.module.css';
 const Dashboard = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
