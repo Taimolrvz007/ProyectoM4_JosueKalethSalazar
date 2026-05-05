@@ -7,6 +7,7 @@ import {
   updateDoc, deleteDoc, doc, orderBy
 } from 'firebase/firestore';
 // @ts-ignore
+
 import styles from './dashboard-style.module.css';
 const Dashboard = () => {
   const [tasks, setTasks] = useState<any[]>([]);
