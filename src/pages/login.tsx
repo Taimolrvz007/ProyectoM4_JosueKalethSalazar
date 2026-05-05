@@ -28,51 +28,21 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Bienvenido</h2>
-
-        {/* 3. Conectamos el formulario a la función handleLogin */}
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} // <--- Guardamos el email
-              className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-              placeholder="correo@ejemplo.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} // <--- Guardamos la contraseña
-              className="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors shadow-md"
-          >
-            Iniciar Sesión
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          ¿No tienes cuenta?
-          {/* Usamos Link de react-router-dom para no recargar la página al navegar */}
-          <Link to="/register" className="text-blue-600 font-semibold hover:underline ml-1">
-            Regístrate
-          </Link>
-        </p>
-      </div>
-    </div>
+    <div className="login-container">
+  <h1 className="app-title">Task Pro</h1>
+  <p style={{ color: 'var(--text-muted)' }}>Bienvenido de nuevo</p>
+  
+  <form>
+    <input type="email" placeholder="Tu Email" />
+    <input type="password" placeholder="Tu Contraseña" />
+    <button className="btn-primary">Iniciar Sesión</button>
+  </form>
+  
+  <div style={{ marginTop: '20px' }}>
+    <span style={{ color: 'var(--text-muted)' }}>¿No tienes cuenta? </span>
+    <a href="/register" className="link-alt">Regístrate</a>
+  </div>
+</div>
   );
 };
 
