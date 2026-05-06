@@ -93,7 +93,6 @@ Durante la creación de este proyecto, se utilizaron técnicas de Prompt Enginee
 **Programador:** Josué Kaleth Salazar Valderrama
 
 - **GitHub:** [Taimolrvz007](https://github.com/Taimolrvz007)
-- **LinkedIn:** [Tu Enlace de LinkedIn Aquí] *(Opcional)*
 
 ---
 
